@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 #include "research_manager.h"
-
+    using namespace std;
 void displayMenu() {
     std::cout << "\n=========== RESEARCH PROJECT MANAGEMENT ===========\n";
     std::cout << "1. Them cong trinh moi\n";
@@ -144,6 +144,9 @@ int main() {
                 std::cout << "Lua chon khong hop le!\n";
         }
     } while (choice != 8);
+    
+    // gọi sau khi load hoặc sau khi thêm/sửa:
+    manager.exportToText("export.txt");
     
     return 0;
 }

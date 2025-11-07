@@ -18,7 +18,6 @@ class LinkedList {
 private:
     Node<T>* head;
     int size;
-
 public:
     LinkedList() : head(nullptr), size(0) {}
 

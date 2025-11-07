@@ -38,6 +38,16 @@ public:
 
     // Virtual function for file output
     virtual std::string toFileString() const = 0;
+
+    // Human readable string for export
+    virtual std::string toString() const {
+        std::string s;
+        s += getTypeString() + " - ID: " + id + "\n";
+        s += "Title: " + title + "\n";
+        s += "Author: " + author + "\n";
+        s += "Year: " + std::to_string(year) + "\n";
+        return s;
+    }
 };
 
 class JournalPaper : public ResearchProject {
@@ -75,6 +85,14 @@ public:
                std::to_string(year) + "|" + journalName + "|" + 
                std::to_string(impactFactor);
     }
+
+    std::string toString() const override {
+        std::string s = ResearchProject::toString();
+        s += "Journal: " + journalName + "\n";
+        s += "Impact Factor: " + std::to_string(impactFactor) + "\n";
+        s += "----------------------------------------\n";
+        return s;
+    }
 };
 
 class ConferencePaper : public ResearchProject {
@@ -106,6 +124,14 @@ public:
     std::string toFileString() const override {
         return "CONFERENCE|" + id + "|" + title + "|" + author + "|" + 
                std::to_string(year) + "|" + conferenceName + "|" + location;
+    }
+
+    std::string toString() const override {
+        std::string s = ResearchProject::toString();
+        s += "Conference: " + conferenceName + "\n";
+        s += "Location: " + location + "\n";
+        s += "----------------------------------------\n";
+        return s;
     }
 };
 
@@ -145,6 +171,14 @@ public:
                std::to_string(duration);
     }
 
+    std::string toString() const override {
+        std::string s = ResearchProject::toString();
+        s += "Budget: " + std::to_string(budget) + " million VND\n";
+        s += "Duration: " + std::to_string(duration) + " months\n";
+        s += "----------------------------------------\n";
+        return s;
+    }    
+    
     double getBudget() const { return budget; }
     int getDuration() const { return duration; }
 };

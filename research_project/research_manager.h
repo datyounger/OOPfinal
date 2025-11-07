@@ -153,6 +153,51 @@ public:
         file.close();
     }
 
+    // Xuất danh sách dự án + thống kê ra file text (human-readable)
+    void exportToText(const std::string& outFilename) {
+        std::ofstream out(outFilename);
+        if (!out.is_open()) {
+            std::cerr << "Error: Cannot open output file: " << outFilename << "\n";
+            return;
+        }
+
+        out << "=== PROJECT LIST ===\n";
+        for (auto it = projects.begin(); it != projects.end(); ++it) {
+            // Dùng toFileString() (format lưu) — thay bằng hàm toString() nếu có để đọc dễ hơn
+            out << (*it)->toFileString() << "\n";
+        }
+
+        // Tính thống kê
+        int journalCount = 0, conferenceCount = 0, grantCount = 0;
+        double totalBudget = 0, totalDuration = 0;
+        for (auto it = projects.begin(); it != projects.end(); ++it) {
+            ResearchProject* project = *it;
+            switch (project->getType()) {
+                case JOURNAL: journalCount++; break;
+                case CONFERENCE: conferenceCount++; break;
+                case GRANT:
+                    grantCount++;
+                    totalBudget += static_cast<ResearchGrant*>(project)->getBudget();
+                    totalDuration += static_cast<ResearchGrant*>(project)->getDuration();
+                    break;
+            }
+        }
+
+        out << "\n=== STATISTICS ===\n";
+        out << "Total Projects: " << projects.getSize() << "\n";
+        out << "Journal Papers: " << journalCount << "\n";
+        out << "Conference Papers: " << conferenceCount << "\n";
+        out << "Research Grants: " << grantCount << "\n";
+        if (grantCount > 0) {
+            out << "Total Budget: " << totalBudget << " million VND\n";
+            out << "Average Duration: " << (totalDuration / grantCount) << " months\n";
+        }
+        out << "==================\n";
+
+        out.close();
+        std::cout << "Exported projects to " << outFilename << "\n";
+    }
+    
     void loadFromFile() {
         std::ifstream file(filename);
         if (!file.is_open()) {
